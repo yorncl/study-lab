@@ -45,8 +45,9 @@ function BinauralBeats() {
     this.osc2.start(0);
   };
   this.stop = function () {
-    this.osc1.stop(0);
-    this.osc2.stop(0);
+    // check if running
+    if (this.osc1.state === "running") this.osc1.stop();
+    if (this.osc2.state === "running") this.osc2.stop();
   };
 }
 

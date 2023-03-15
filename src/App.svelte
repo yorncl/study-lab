@@ -8,6 +8,7 @@
     faGear,
     faInfoCircle,
   } from "@fortawesome/free-solid-svg-icons";
+  import { faGithub } from "@fortawesome/free-brands-svg-icons";
   import { volume } from "./store";
   import BinauralBeats from "./audio";
 
@@ -71,6 +72,32 @@
 </script>
 
 <main>
+  <div class="fixed top-0 left-0 w-full ">
+    <div class="flex w-full justify-center">
+      <div class="navbar w-1/2">
+        <div class="flex-1">
+          <a class="btn btn-ghost normal-case text-2xl">Yorn's study lab</a>
+        </div>
+        <div class="flex-none text-4xl" id="menuitems">
+          <label for="settings-modal">
+            <div alt="Settings">
+              <Fa icon={faGear} />
+            </div>
+          </label>
+          <label for="info-modal">
+            <div alt="Info">
+              <Fa icon={faInfoCircle} />
+            </div>
+          </label>
+          <a href="https://github.com/yorncl/study-lab">
+            <div alt="Github">
+              <Fa icon={faGithub} />
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
   <div>
     <h1>Study Timer</h1>
     <!-- counter in hours, minutes and seconds -->
@@ -95,15 +122,37 @@
     {/if}
     <VolumeSlider />
   </div>
-  <div id="settings">
-    <div alt="Settings" on:click={reset}>
-      <Fa icon={faGear} />
-    </div>
-    <div alt="Info" on:click={reset}>
-      <Fa icon={faInfoCircle} />
-    </div>
-  </div>
-  {$volume}
+
+  <!-- Put this part before </body> tag -->
+  <input type="checkbox" id="settings-modal" class="modal-toggle" />
+  <label for="settings-modal" class="modal cursor-pointer">
+    <label class="modal-box relative" for="">
+      <h3 class="text-lg font-bold">Congratulations random Internet user!</h3>
+      <p class="py-4">
+        You've been selected for a chance to get one year of subscription to use
+        Wikipedia for free!
+      </p>
+    </label>
+  </label>
+  <input type="checkbox" id="info-modal" class="modal-toggle" />
+  <label for="info-modal" class="modal cursor-pointer">
+    <label class="modal-box relative" for="">
+      <h3 class="text-lg font-bold">Info</h3>
+      <p class="py-4">
+        This app is based on the information from the Huberman Lab's newsletter
+      </p>
+      <ul>
+        <li>
+          <a
+            href="https://hubermanlab.com/teach-and-learn-better-with-a-neuroplasticity-super-protocol/
+"
+            >Neuroplasticity protocol
+          </a>
+        </li>
+        <li>https://www.hubermanlab.com/brainwave-entrainment/</li>
+      </ul>
+    </label>
+  </label>
 </main>
 
 <style>
@@ -117,29 +166,23 @@
     margin: 0 auto;
   }
 
+  #menuitems > * {
+    background-color: rgba(0, 0, 0, 0.5);
+    @apply block ml-3 p-2 rounded-lg cursor-pointer;
+  }
+
   #timer {
     font-size: 3em;
     font-weight: 100;
   }
 
-  #controls,
-  #settings {
+  #controls {
     margin-top: 0.4em;
     font-size: 2em;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-  }
-
-  #controls > div,
-  #settings > div {
-    cursor: pointer;
-    margin: 0 0.5em;
-    background-color: rgba(0, 0, 0, 0.4);
-    padding: 20px;
-    min-width: 30px;
-    border-radius: 15px;
   }
 
   h1 {
