@@ -1,51 +1,24 @@
 <script>
-  import { writable } from "svelte/store";
+  import { writable, get } from "svelte/store";
   import Fa from "svelte-fa";
   import {
     faPause,
     faPlay,
     faRefresh,
+    faGear,
+    faInfoCircle,
   } from "@fortawesome/free-solid-svg-icons";
+  import { volume } from "./store";
+  import BinauralBeats from "./audio";
 
-  var context = new AudioContext();
-
-  //function that generates a 100hz tone
-  function generateOscillator(freq) {
-    var oscillator = context.createOscillator();
-    var gainNode = context.createGain();
-    oscillator.frequency.value = freq;
-    return oscillator;
-  }
-
-  function BinauralBeats() {
-    this.osc1 = generateOscillator(100);
-    this.osc2 = generateOscillator(140);
-    this.panner1 = context.createStereoPanner();
-    this.panner2 = context.createStereoPanner();
-    //panner1 to left
-    this.panner1.pan.value = -1;
-    // panner2 to right
-    this.panner2.pan.value = 1;
-    this.gainNode = context.createGain();
-    this.gainNode.gain.value = 0.01;
-    this.osc1.connect(this.panner1);
-    this.osc2.connect(this.panner2);
-    //connect panners
-    this.panner1.connect(this.gainNode);
-    this.panner2.connect(this.gainNode);
-    this.gainNode.connect(context.destination);
-
-    this.start = function () {
-      this.osc1.start(0);
-      this.osc2.start(0);
-    };
-    this.stop = function () {
-      this.osc1.stop(0);
-      this.osc2.stop(0);
-    };
-  }
+  import VolumeSlider from "./components/VolumeSlider.svelte";
 
   let bb = new BinauralBeats();
+  // update volume on store change
+  volume.subscribe((value) => {
+    if (bb) bb.setVolume(value);
+  });
+
   let counter = 5400;
   let started = false;
   let paused = false;
@@ -120,7 +93,17 @@
     {:else}
       <div on:click={start}>Start</div>
     {/if}
+    <VolumeSlider />
   </div>
+  <div id="settings">
+    <div alt="Settings" on:click={reset}>
+      <Fa icon={faGear} />
+    </div>
+    <div alt="Info" on:click={reset}>
+      <Fa icon={faInfoCircle} />
+    </div>
+  </div>
+  {$volume}
 </main>
 
 <style>
@@ -139,8 +122,9 @@
     font-weight: 100;
   }
 
-  #controls {
-    margin-top: 1em;
+  #controls,
+  #settings {
+    margin-top: 0.4em;
     font-size: 2em;
     display: flex;
     flex-direction: row;
@@ -148,7 +132,8 @@
     justify-content: center;
   }
 
-  #controls > div {
+  #controls > div,
+  #settings > div {
     cursor: pointer;
     margin: 0 0.5em;
     background-color: rgba(0, 0, 0, 0.4);
