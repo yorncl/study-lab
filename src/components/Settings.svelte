@@ -7,35 +7,33 @@
   }
 </script>
 
-<main>
-  <div class="modal">
-    <div id="exitSettings" on:click={close} />
-    This is a modal
+<div class="modal">
+  <div id="exitSettings" on:click={close} />
+  This is a modal
 
+  <div>
     <div>
+      <label for="freqLeft">Left frequency</label>
+      <input
+        type="number"
+        id="freqLeft"
+        bind:value={freqLeft}
+        min="0"
+        max="1000"
+      />
       <div>
-        <label for="freqLeft">Left frequency</label>
+        <label for="freqRight">Right frequency</label>
         <input
           type="number"
-          id="freqLeft"
-          bind:value={freqLeft}
+          id="freqRight"
+          bind:value={freqRight}
           min="0"
           max="1000"
         />
-        <div>
-          <label for="freqRight">Right frequency</label>
-          <input
-            type="number"
-            id="freqRight"
-            bind:value={freqRight}
-            min="0"
-            max="1000"
-          />
-        </div>
       </div>
     </div>
   </div>
-</main>
+</div>
 
 <style>
   .modal {

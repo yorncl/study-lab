@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 
-let volume = writable(0.5);
+let volume = writable(0.1);
 let muted = writable(false);
 
 let freqLeft = writable(100);

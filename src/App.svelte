@@ -69,6 +69,8 @@
     }
     return hours + ":" + minutes + ":" + seconds;
   }
+
+  let volInput = $volume * 100;
 </script>
 
 <main>
@@ -103,24 +105,35 @@
     <!-- counter in hours, minutes and seconds -->
     <span id="timer">{computeCounterString(counter)}</span>
   </div>
-  <div id="controls">
-    {#if started}
-      {#if paused}
-        <div alt="Unpause" on:click={unpause}>
-          <Fa icon={faPlay} />
+  <div class="flex flex-col items-center">
+    <div>
+      {#if started}
+        {#if paused}
+          <div class="btn" on:click={unpause} on:keydown={unpause}>
+            <Fa icon={faPlay} />
+          </div>
+        {:else}
+          <div class="btn" on:click={pause} on:keydown={pause}>
+            <Fa icon={faPause} />
+          </div>
+        {/if}
+        <div class="btn" on:click={reset} on:keydown={reset}>
+          <Fa icon={faRefresh} />
         </div>
       {:else}
-        <div alt="Pause" on:click={pause}>
-          <Fa icon={faPause} />
-        </div>
+        <div class="btn " on:click={start} on:keydown={start}>Start</div>
       {/if}
-      <div alt="Reset" on:click={reset}>
-        <Fa icon={faRefresh} />
-      </div>
-    {:else}
-      <div on:click={start}>Start</div>
-    {/if}
-    <VolumeSlider />
+    </div>
+    <input
+      type="range"
+      min="0"
+      max="100"
+      bind:value={volInput}
+      class="range range-primary"
+      on:input={() => {
+        volume.set(volInput / 100);
+      }}
+    />
   </div>
 
   <!-- Put this part before </body> tag -->
@@ -147,6 +160,7 @@
             href="https://hubermanlab.com/teach-and-learn-better-with-a-neuroplasticity-super-protocol/
 "
             >Neuroplasticity protocol
+            >https://hubermanlab.com/teach-and-learn-better-with-a-neuroplasticity-super-protocol/
           </a>
         </li>
         <li>https://www.hubermanlab.com/brainwave-entrainment/</li>
@@ -168,21 +182,12 @@
 
   #menuitems > * {
     background-color: rgba(0, 0, 0, 0.5);
-    @apply block ml-3 p-2 rounded-lg cursor-pointer;
+    @apply rounded-lg cursor-pointer text-3xl ml-3 btn btn btn-square;
   }
 
   #timer {
     font-size: 3em;
     font-weight: 100;
-  }
-
-  #controls {
-    margin-top: 0.4em;
-    font-size: 2em;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
   }
 
   h1 {
