@@ -7,12 +7,14 @@
     faRefresh,
     faGear,
     faInfoCircle,
+    faVolumeMute,
+    faVolumeLow,
+    faVolumeHigh,
   } from "@fortawesome/free-solid-svg-icons";
   import { faGithub } from "@fortawesome/free-brands-svg-icons";
   import { volume } from "./store";
   import BinauralBeats from "./audio";
-
-  import VolumeSlider from "./components/VolumeSlider.svelte";
+  import Timer from "./components/Timer.svelte";
 
   let bb = new BinauralBeats();
   // update volume on store change
@@ -71,6 +73,8 @@
   }
 
   let volInput = $volume * 100;
+
+  function toggleMute() {}
 </script>
 
 <main>
@@ -104,6 +108,7 @@
     <h1>Study Timer</h1>
     <!-- counter in hours, minutes and seconds -->
     <span id="timer">{computeCounterString(counter)}</span>
+    <Timer />
   </div>
   <div class="flex flex-col items-center">
     <div>
@@ -124,16 +129,27 @@
         <div class="btn " on:click={start} on:keydown={start}>Start</div>
       {/if}
     </div>
-    <input
-      type="range"
-      min="0"
-      max="100"
-      bind:value={volInput}
-      class="range range-primary"
-      on:input={() => {
-        volume.set(volInput / 100);
-      }}
-    />
+    <div class="flex flex-row items-center">
+      <div class="btn btn-square" on:click={toggleMute} on:keydown={toggleMute}>
+        {#if $volume == 0}
+          <Fa icon={faVolumeMute} />
+        {:else if $volume < 0.5}
+          <Fa icon={faVolumeLow} />
+        {:else}
+          <Fa icon={faVolumeHigh} />
+        {/if}
+      </div>
+      <input
+        type="range"
+        min="0"
+        max="100"
+        bind:value={volInput}
+        class="ml-3 range range-primary"
+        on:input={() => {
+          volume.set(volInput / 100);
+        }}
+      />
+    </div>
   </div>
 
   <!-- Put this part before </body> tag -->
