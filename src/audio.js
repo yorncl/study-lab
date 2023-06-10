@@ -1,12 +1,13 @@
 import { volume, freqLeft, freqRight } from "./store";
 import { get } from "svelte/store";
 
-var context = new AudioContext();
+let context = new AudioContext();
+let gainNode = null;
 
 //function that generates a 100hz tone
 function generateOscillator(freq) {
-  var oscillator = context.createOscillator();
-  var gainNode = context.createGain();
+  let oscillator = context.createOscillator();
+  gainNode = context.createGain();
   oscillator.frequency.value = freq;
   return oscillator;
 }
@@ -48,6 +49,31 @@ function BinauralBeats() {
     // check if running and stop if it is
     this.osc1.stop(0);
     this.osc2.stop(0);
+  };
+
+  this.playBell = function () // TODO move this is gross
+  {
+    // Create an AudioBufferSourceNode
+    const sourceNode = context.createBufferSource();
+
+    // Load an audio file (replace 'sound.wav' with your audio file)
+    const audioFile = "bell.mp3";
+    fetch(audioFile) // TODO fetching everytime is ugly af but it's midnight and I'm tired, move somewhere better
+      .then((response) => response.arrayBuffer())
+      .then((arrayBuffer) => context.decodeAudioData(arrayBuffer))
+      .then((audioBuffer) => {
+        // Assign the audio buffer to the source node
+        sourceNode.buffer = audioBuffer;
+
+        // Connect the source node to the gain node
+        sourceNode.connect(this.gainNode);
+
+        // Start playing the sound
+        sourceNode.start();
+      })
+      .catch((error) => {
+        console.error("Error loading audio file:", error);
+      });
   };
 }
 

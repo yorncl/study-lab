@@ -26,7 +26,33 @@
   let started = false;
   let paused = false;
   let timer = null;
+
+  // create a timeout that fires every two minutes on average
+
+  function playBellSound() {
+    bb.playBell();
+  }
+
+  let randomTimer = null;
+  function createRandomTimeout() {
+    let u = 1 - Math.random();
+    let v = Math.random();
+    let z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    let seconds = z * 15 + 120;
+    randomTimer = setTimeout(() => {
+      playBellSound();
+      createRandomTimeout();
+    }, seconds * 1000);
+  }
+  function enableRandomTimer() {
+    createRandomTimeout();
+  }
+  function disableRandomTimer() {
+    clearTimeout(randomTimer);
+  }
+
   function start() {
+    enableRandomTimer();
     bb.start();
     // start a timer
     timer = setInterval(() => {
@@ -40,15 +66,18 @@
     started = true;
   }
   function pause() {
+    disableRandomTimer();
     bb.stop();
     paused = true;
   }
   function unpause() {
+    enableRandomTimer();
     bb = new BinauralBeats();
     bb.start();
     paused = false;
   }
   function reset() {
+    disableRandomTimer();
     if (bb) bb.stop();
     bb = new BinauralBeats();
     paused = false;
@@ -78,7 +107,7 @@
 </script>
 
 <main>
-  <div class="fixed top-0 left-0 w-full ">
+  <div class="fixed top-0 left-0 w-full">
     <div class="flex w-full justify-center">
       <div class="navbar w-1/2">
         <div class="flex-1">
@@ -108,7 +137,7 @@
     <h1>Study Timer</h1>
     <!-- counter in hours, minutes and seconds -->
     <span id="timer">{computeCounterString(counter)}</span>
-    <Timer />
+    <!-- <Timer /> -->
   </div>
   <div class="flex flex-col items-center">
     <div>
@@ -126,7 +155,7 @@
           <Fa icon={faRefresh} />
         </div>
       {:else}
-        <div class="btn " on:click={start} on:keydown={start}>Start</div>
+        <div class="btn" on:click={start} on:keydown={start}>Start</div>
       {/if}
     </div>
     <div class="flex flex-row items-center">
