@@ -16,7 +16,7 @@
   import BinauralBeats from "./audio";
   import Timer from "./components/Timer.svelte";
 
-  let bb = new BinauralBeats();
+  let bb = null;
   // update volume on store change
   volume.subscribe((value) => {
     if (bb) bb.setVolume(value);
@@ -52,6 +52,7 @@
   }
 
   function start() {
+    bb = new BinauralBeats();
     enableRandomTimer();
     bb.start();
     // start a timer
@@ -111,7 +112,7 @@
     <div class="flex w-full justify-center">
       <div class="navbar w-1/2">
         <div class="flex-1">
-          <a class="btn btn-ghost normal-case text-2xl">Yorn's study lab</a>
+          <a href="/" class="btn btn-ghost normal-case text-2xl">Yorn's study lab</a>
         </div>
         <div class="flex-none text-4xl" id="menuitems">
           <label for="settings-modal">

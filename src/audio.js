@@ -1,7 +1,7 @@
 import { volume, freqLeft, freqRight } from "./store";
 import { get } from "svelte/store";
 
-let context = new AudioContext();
+let context = null;
 let gainNode = null;
 
 //function that generates a 100hz tone
@@ -13,6 +13,7 @@ function generateOscillator(freq) {
 }
 
 function BinauralBeats() {
+  context = new AudioContext();
   this.osc1 = generateOscillator(get(freqLeft));
   this.osc2 = generateOscillator(get(freqRight));
   // subscribe for change in frequences
